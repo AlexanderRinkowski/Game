@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <div id="water" class="row" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Water</h2>
+        </div>
+        <div id="fire" class="row" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Fire</h2>
+        </div>
+        <div id="air" class="row" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Air</h2>
+        </div>
+        <div id="earth" class="row" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Earth</h2>
+        </div>
+    </div>
+
+    <div class="hand-container">
+        <h2>Hand</h2>
+        <div id="card1" class="card" draggable="true" ondragstart="drag(event)">1</div>
+        <div id="card2" class="card" draggable="true" ondragstart="drag(event)">2</div>
+        <div id="card3" class="card" draggable="true" ondragstart="drag(event)">3</div>
+        <div id="card4" class="card" draggable="true" ondragstart="drag(event)">4</div>
+        <div id="card5" class="card" draggable="true" ondragstart="drag(event)">5</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
