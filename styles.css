@@ -9,7 +9,7 @@ body {
 .main-container {
     display: flex;
     flex-direction: column;
-    width: 75%;
+    width: 60%;
     padding: 20px;
 }
 
@@ -25,7 +25,7 @@ body {
 }
 
 .hand-container {
-    width: 25%;
+    width: 20%;
     padding: 20px;
     border-left: 2px solid #ccc;
     display: flex;
@@ -38,7 +38,6 @@ body {
     width: 80px;
     height: 80px;
     margin: 10px;
-    background-color: #4CAF50;
     color: white;
     display: flex;
     justify-content: center;
@@ -49,7 +48,15 @@ body {
 }
 
 .card:hover {
-    background-color: #45a049;
+    opacity: 0.9;
+}
+
+.player-one {
+    background-color: #4CAF50; /* Green for Player One */
+}
+
+.player-two {
+    background-color: #FF5733; /* Orange for Player Two */
 }
 
 h2 {

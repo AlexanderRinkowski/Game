@@ -10,9 +10,9 @@ function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
     var card = document.getElementById(data);
-    if (ev.target.className === "row") {
+    if (ev.target.className.includes("row")) {
         ev.target.appendChild(card);
-    } else if (ev.target.className === "card") {
+    } else if (ev.target.className.includes("card")) {
         ev.target.parentElement.appendChild(card);
     }
 }
