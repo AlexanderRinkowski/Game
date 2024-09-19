@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drag and Drop</title>
+    <title>Drag and Drop with Turn Logic</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -29,15 +29,17 @@
         <div id="card3" class="card player-one" draggable="true" ondragstart="drag(event)">3</div>
         <div id="card4" class="card player-one" draggable="true" ondragstart="drag(event)">4</div>
         <div id="card5" class="card player-one" draggable="true" ondragstart="drag(event)">5</div>
+        <button onclick="endTurn()">End Turn</button>
     </div>
 
     <div class="hand-container">
         <h2>Player Two's Hand</h2>
-        <div id="card6" class="card player-two" draggable="true" ondragstart="drag(event)">1</div>
-        <div id="card7" class="card player-two" draggable="true" ondragstart="drag(event)">2</div>
-        <div id="card8" class="card player-two" draggable="true" ondragstart="drag(event)">3</div>
-        <div id="card9" class="card player-two" draggable="true" ondragstart="drag(event)">4</div>
-        <div id="card10" class="card player-two" draggable="true" ondragstart="drag(event)">5</div>
+        <div id="card6" class="card player-two" draggable="false" ondragstart="drag(event)">1</div>
+        <div id="card7" class="card player-two" draggable="false" ondragstart="drag(event)">2</div>
+        <div id="card8" class="card player-two" draggable="false" ondragstart="drag(event)">3</div>
+        <div id="card9" class="card player-two" draggable="false" ondragstart="drag(event)">4</div>
+        <div id="card10" class="card player-two" draggable="false" ondragstart="drag(event)">5</div>
+        <button onclick="endTurn()" disabled>End Turn</button>
     </div>
 
     <script src="script.js"></script>
