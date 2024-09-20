@@ -36,6 +36,7 @@ function createNewCardForPlayer(player) {
     newCard.setAttribute("id", cardId);
     newCard.setAttribute("draggable", "true");
     newCard.setAttribute("ondragstart", "drag(event)");
+    newCard.setAttribute("data-strength", strength); // Set strength as a data attribute
     newCard.textContent = `ID: ${cardId}, Strength: ${strength}`; // Set text content
 
     cardCounter++;

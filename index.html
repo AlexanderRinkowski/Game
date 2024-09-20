@@ -24,21 +24,21 @@
 
     <div class="hand-container">
         <h2>Player One's Hand</h2>
-        <div id="card1" class="card player-one" draggable="true" ondragstart="drag(event)">ID: card1, Strength: 3</div>
-        <div id="card2" class="card player-one" draggable="true" ondragstart="drag(event)">ID: card2, Strength: 2</div>
-        <div id="card3" class="card player-one" draggable="true" ondragstart="drag(event)">ID: card3, Strength: 5</div>
-        <div id="card4" class="card player-one" draggable="true" ondragstart="drag(event)">ID: card4, Strength: 1</div>
-        <div id="card5" class="card player-one" draggable="true" ondragstart="drag(event)">ID: card5, Strength: 4</div>
+        <div id="card1" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="3">ID: card1, Strength: 3</div>
+        <div id="card2" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="2">ID: card2, Strength: 2</div>
+        <div id="card3" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="5">ID: card3, Strength: 5</div>
+        <div id="card4" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="1">ID: card4, Strength: 1</div>
+        <div id="card5" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="4">ID: card5, Strength: 4</div>
         <button onclick="endTurn()">End Turn</button>
     </div>
 
     <div class="hand-container">
         <h2>Player Two's Hand</h2>
-        <div id="card6" class="card player-two" draggable="false" ondragstart="drag(event)">ID: card6, Strength: 4</div>
-        <div id="card7" class="card player-two" draggable="false" ondragstart="drag(event)">ID: card7, Strength: 1</div>
-        <div id="card8" class="card player-two" draggable="false" ondragstart="drag(event)">ID: card8, Strength: 3</div>
-        <div id="card9" class="card player-two" draggable="false" ondragstart="drag(event)">ID: card9, Strength: 5</div>
-        <div id="card10" class="card player-two" draggable="false" ondragstart="drag(event)">ID: card10, Strength: 2</div>
+        <div id="card6" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="4">ID: card6, Strength: 4</div>
+        <div id="card7" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="1">ID: card7, Strength: 1</div>
+        <div id="card8" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="3">ID: card8, Strength: 3</div>
+        <div id="card9" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="5">ID: card9, Strength: 5</div>
+        <div id="card10" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="2">ID: card10, Strength: 2</div>
         <button onclick="endTurn()" disabled>End Turn</button>
     </div>
 
