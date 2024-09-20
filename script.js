@@ -53,26 +53,71 @@ function createNewCardForPlayer(player) {
 }
 
 function endTurn() {
+    resolveBattles(); // Resolve any battles before switching turns
+
     if (currentPlayer === 1) {
-        // End Player One's turn and start Player Two's turn
         currentPlayer = 2;
         document.querySelectorAll('.player-one').forEach(card => card.setAttribute('draggable', 'false'));
         document.querySelectorAll('.player-two').forEach(card => card.setAttribute('draggable', 'true'));
         document.querySelectorAll('.hand-container button')[0].disabled = true;
         document.querySelectorAll('.hand-container button')[1].disabled = false;
 
-        // Create new card for Player Two
         createNewCardForPlayer(2);
-
     } else {
-        // End Player Two's turn and start Player One's turn
         currentPlayer = 1;
         document.querySelectorAll('.player-one').forEach(card => card.setAttribute('draggable', 'true'));
         document.querySelectorAll('.player-two').forEach(card => card.setAttribute('draggable', 'false'));
         document.querySelectorAll('.hand-container button')[0].disabled = false;
         document.querySelectorAll('.hand-container button')[1].disabled = true;
 
-        // Create new card for Player One
         createNewCardForPlayer(1);
     }
+}
+
+function resolveBattles() {
+    const rows = document.querySelectorAll('.row');
+    rows.forEach(row => {
+        const cards = Array.from(row.children).filter(child => child.classList.contains('card'));
+        if (cards.length > 1) {
+            let playerOneCards = [];
+            let playerTwoCards = [];
+
+            cards.forEach(card => {
+                if (card.classList.contains('player-one')) {
+                    playerOneCards.push(card);
+                } else if (card.classList.contains('player-two')) {
+                    playerTwoCards.push(card);
+                }
+            });
+
+            if (playerOneCards.length > 0 && playerTwoCards.length > 0) {
+                while (playerOneCards.length > 0 && playerTwoCards.length > 0) {
+                    let cardOne = playerOneCards[playerOneCards.length - 1];
+                    let cardTwo = playerTwoCards[0];
+
+                    let strengthOne = parseInt(cardOne.getAttribute('data-strength'));
+                    let strengthTwo = parseInt(cardTwo.getAttribute('data-strength'));
+
+                    if (strengthOne > strengthTwo) {
+                        strengthOne -= strengthTwo;
+                        cardOne.setAttribute('data-strength', strengthOne);
+                        cardOne.textContent = `ID: ${cardOne.id}, Strength: ${strengthOne}`;
+                        row.removeChild(cardTwo);
+                        playerTwoCards.shift();
+                    } else if (strengthTwo > strengthOne) {
+                        strengthTwo -= strengthOne;
+                        cardTwo.setAttribute('data-strength', strengthTwo);
+                        cardTwo.textContent = `ID: ${cardTwo.id}, Strength: ${strengthTwo}`;
+                        row.removeChild(cardOne);
+                        playerOneCards.pop();
+                    } else {
+                        row.removeChild(cardOne);
+                        row.removeChild(cardTwo);
+                        playerOneCards.pop();
+                        playerTwoCards.shift();
+                    }
+                }
+            }
+        }
+    });
 }
