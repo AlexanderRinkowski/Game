@@ -147,7 +147,7 @@ function resolveBattles() {
 
                 // Step 2: Close combat between adjacent cards
                 resolveCloseCombat(row, playerOneCards, playerTwoCards);
-            }, 2000 * (rowIndex + 1));
+            }, 1000 * (rowIndex + 1));
         }
     });
 }
