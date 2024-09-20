@@ -31,20 +31,23 @@ function drop(ev) {
 function createNewCardForPlayer(player) {
     const newCard = document.createElement("div");
     newCard.classList.add("card");
-    newCard.textContent = (cardCounter).toString();
+    const strength = Math.floor(Math.random() * 5) + 1; // Generate random strength between 1 and 5
+    const cardId = "card" + cardCounter; // Generate unique card ID
+    newCard.setAttribute("id", cardId);
     newCard.setAttribute("draggable", "true");
     newCard.setAttribute("ondragstart", "drag(event)");
-    newCard.setAttribute("id", "card" + cardCounter); // Set unique ID
+    newCard.textContent = `ID: ${cardId}, Strength: ${strength}`; // Set text content
+
     cardCounter++;
 
     if (player === 1) {
         newCard.classList.add("player-one");
         const playerOneHand = document.querySelector(".hand-container:nth-child(2)");
-        playerOneHand.insertBefore(newCard, playerOneHand.children[1]);
+        playerOneHand.insertBefore(newCard, playerOneHand.children[1]); // Insert after <h2> element
     } else {
         newCard.classList.add("player-two");
         const playerTwoHand = document.querySelector(".hand-container:nth-child(3)");
-        playerTwoHand.insertBefore(newCard, playerTwoHand.children[1]);
+        playerTwoHand.insertBefore(newCard, playerTwoHand.children[1]); // Insert after <h2> element
     }
 }
 
