@@ -58,7 +58,6 @@ function createNewCardForPlayer(player) {
     }
 }
 
-
 function endTurn() {
     resolveBattles(); // Resolve any battles before switching turns
 
@@ -83,7 +82,7 @@ function endTurn() {
 
 function resolveBattles() {
     const rows = document.querySelectorAll('.row');
-    rows.forEach((row, rowIndex) => {
+    rows.forEach((row) => {
         const cards = Array.from(row.children).filter(child => child.classList.contains('card'));
         if (cards.length > 1) {
             let playerOneCards = [];
@@ -98,27 +97,37 @@ function resolveBattles() {
                 }
             });
 
-            // Step 1: Wizards attack simultaneously
-            let playerOneWizardAttack = 0;
-            let playerTwoWizardAttack = 0;
+            // Determine who is the defender based on the first card in the row
+            let defenderCards, attackerCards;
+            if (cards[0].classList.contains('player-one')) {
+                defenderCards = playerOneCards;
+                attackerCards = playerTwoCards;
+            } else {
+                defenderCards = playerTwoCards;
+                attackerCards = playerOneCards;
+            }
 
-            playerOneCards.forEach(card => {
+            // Step 1: Wizards attack simultaneously
+            let defenderWizardAttack = 0;
+            let attackerWizardAttack = 0;
+
+            defenderCards.forEach(card => {
                 if (card.getAttribute('data-type') === 'wizard') {
-                    playerOneWizardAttack = Math.max(playerOneWizardAttack, parseInt(card.getAttribute('data-strength')));
+                    defenderWizardAttack = Math.max(defenderWizardAttack, parseInt(card.getAttribute('data-strength')));
                 }
             });
 
-            playerTwoCards.forEach(card => {
+            attackerCards.forEach(card => {
                 if (card.getAttribute('data-type') === 'wizard') {
-                    playerTwoWizardAttack = Math.max(playerTwoWizardAttack, parseInt(card.getAttribute('data-strength')));
+                    attackerWizardAttack = Math.max(attackerWizardAttack, parseInt(card.getAttribute('data-strength')));
                 }
             });
 
             // Apply the Wizards' attacks
-            playerOneCards.forEach(card => {
+            defenderCards.forEach(card => {
                 let currentStrength = parseInt(card.getAttribute('data-strength'));
                 const cardType = card.getAttribute('data-type');
-                currentStrength -= playerTwoWizardAttack;
+                currentStrength -= attackerWizardAttack;
                 if (currentStrength <= 0) {
                     row.removeChild(card);
                 } else {
@@ -127,10 +136,10 @@ function resolveBattles() {
                 }
             });
 
-            playerTwoCards.forEach(card => {
+            attackerCards.forEach(card => {
                 let currentStrength = parseInt(card.getAttribute('data-strength'));
                 const cardType = card.getAttribute('data-type');
-                currentStrength -= playerOneWizardAttack;
+                currentStrength -= defenderWizardAttack;
                 if (currentStrength <= 0) {
                     row.removeChild(card);
                 } else {
@@ -142,47 +151,51 @@ function resolveBattles() {
             // Update the UI to reflect the result of the wizard attack
             setTimeout(() => {
                 // Remove wizards with zero or negative strength
-                playerOneCards = playerOneCards.filter(card => card.parentNode !== null);
-                playerTwoCards = playerTwoCards.filter(card => card.parentNode !== null);
+                defenderCards = defenderCards.filter(card => card.parentNode !== null);
+                attackerCards = attackerCards.filter(card => card.parentNode !== null);
 
                 // Step 2: Close combat between adjacent cards
-                resolveCloseCombat(row, playerOneCards, playerTwoCards);
-            }, 1000 * (rowIndex + 1));
+                resolveCloseCombat(row, defenderCards, attackerCards);
+            }, 500 );
         }
     });
 }
 
-function resolveCloseCombat(row, playerOneCards, playerTwoCards) {
-    if (playerOneCards.length > 0 && playerTwoCards.length > 0) {
-        // Take the last card from player one and the first card from player two
-        let cardOne = playerOneCards.pop();
-        let cardTwo = playerTwoCards.shift();
+function resolveCloseCombat(row, defenderCards, attackerCards) {
+    if (defenderCards.length > 0 && attackerCards.length > 0) {
+        // Take the last card from the defender and the first card from the attacker
+        let defenderCard = defenderCards[defenderCards.length - 1]; // Peek at the last card of the defender
+        let attackerCard = attackerCards[0]; // Peek at the first card of the attacker
 
-        let strengthOne = parseInt(cardOne.getAttribute('data-strength'));
-        let strengthTwo = parseInt(cardTwo.getAttribute('data-strength'));
+        let defenderStrength = parseInt(defenderCard.getAttribute('data-strength'));
+        let attackerStrength = parseInt(attackerCard.getAttribute('data-strength'));
 
-        const cardOneType = cardOne.getAttribute('data-type');
-        const cardTwoType = cardTwo.getAttribute('data-type');
+        const defenderType = defenderCard.getAttribute('data-type');
+        const attackerType = attackerCard.getAttribute('data-type');
 
         setTimeout(() => {
-            if (strengthOne > strengthTwo) {
-                strengthOne -= strengthTwo;
-                cardOne.setAttribute('data-strength', strengthOne);
-                cardOne.textContent = `ID: ${cardOne.id}, Strength: ${strengthOne}, Type: ${cardOneType.charAt(0).toUpperCase() + cardOneType.slice(1)}`;
-                row.removeChild(cardTwo);
-            } else if (strengthTwo > strengthOne) {
-                strengthTwo -= strengthOne;
-                cardTwo.setAttribute('data-strength', strengthTwo);
-                cardTwo.textContent = `ID: ${cardTwo.id}, Strength: ${strengthTwo}, Type: ${cardTwoType.charAt(0).toUpperCase() + cardTwoType.slice(1)}`;
-                row.removeChild(cardOne);
+            if (defenderStrength > attackerStrength) {
+                defenderStrength -= attackerStrength;
+                defenderCard.setAttribute('data-strength', defenderStrength);
+                defenderCard.textContent = `ID: ${defenderCard.id}, Strength: ${defenderStrength}, Type: ${defenderType.charAt(0).toUpperCase() + defenderType.slice(1)}`;
+                attackerCards.shift(); // Remove the defeated attacker card
+                row.removeChild(attackerCard);
+            } else if (attackerStrength > defenderStrength) {
+                attackerStrength -= defenderStrength;
+                attackerCard.setAttribute('data-strength', attackerStrength);
+                attackerCard.textContent = `ID: ${attackerCard.id}, Strength: ${attackerStrength}, Type: ${attackerType.charAt(0).toUpperCase() + attackerType.slice(1)}`;
+                defenderCards.pop(); // Remove the defeated defender card
+                row.removeChild(defenderCard);
             } else {
-                row.removeChild(cardOne);
-                row.removeChild(cardTwo);
+                defenderCards.pop(); // Remove the defeated defender card
+                attackerCards.shift(); // Remove the defeated attacker card
+                row.removeChild(defenderCard);
+                row.removeChild(attackerCard);
             }
 
             // Recursive call to handle the next close combat after 2 seconds
-            resolveCloseCombat(row, playerOneCards, playerTwoCards);
-        }, 1000);
+            resolveCloseCombat(row, defenderCards, attackerCards);
+        }, 500);
     }
 }
 
