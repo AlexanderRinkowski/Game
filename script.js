@@ -114,39 +114,43 @@ function resolveBattles() {
             defenderCards.forEach(card => {
                 if (card.getAttribute('data-type') === 'wizard') {
                     defenderWizardAttack = Math.max(defenderWizardAttack, parseInt(card.getAttribute('data-strength')));
+                    card.classList.add('highlight'); // Highlight wizards
                 }
             });
 
             attackerCards.forEach(card => {
                 if (card.getAttribute('data-type') === 'wizard') {
                     attackerWizardAttack = Math.max(attackerWizardAttack, parseInt(card.getAttribute('data-strength')));
+                    card.classList.add('highlight'); // Highlight wizards
                 }
             });
 
-            // Apply the Wizards' attacks
-            defenderCards.forEach(card => {
-                let currentStrength = parseInt(card.getAttribute('data-strength'));
-                const cardType = card.getAttribute('data-type');
-                currentStrength -= attackerWizardAttack;
-                if (currentStrength <= 0) {
-                    row.removeChild(card);
-                } else {
-                    card.setAttribute('data-strength', currentStrength);
-                    card.textContent = `ID: ${card.id}, Strength: ${currentStrength}, Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
-                }
-            });
+            setTimeout(() => {
+                // Apply the Wizards' attacks
+                defenderCards.forEach(card => {
+                    let currentStrength = parseInt(card.getAttribute('data-strength'));
+                    const cardType = card.getAttribute('data-type');
+                    currentStrength -= attackerWizardAttack;
+                    if (currentStrength <= 0) {
+                        row.removeChild(card);
+                    } else {
+                        card.setAttribute('data-strength', currentStrength);
+                        card.textContent = `ID: ${card.id}, Strength: ${currentStrength}, Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
+                    }
+                });
 
-            attackerCards.forEach(card => {
-                let currentStrength = parseInt(card.getAttribute('data-strength'));
-                const cardType = card.getAttribute('data-type');
-                currentStrength -= defenderWizardAttack;
-                if (currentStrength <= 0) {
-                    row.removeChild(card);
-                } else {
-                    card.setAttribute('data-strength', currentStrength);
-                    card.textContent = `ID: ${card.id}, Strength: ${currentStrength}, Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
-                }
-            });
+                attackerCards.forEach(card => {
+                    let currentStrength = parseInt(card.getAttribute('data-strength'));
+                    const cardType = card.getAttribute('data-type');
+                    currentStrength -= defenderWizardAttack;
+                    if (currentStrength <= 0) {
+                        row.removeChild(card);
+                    } else {
+                        card.setAttribute('data-strength', currentStrength);
+                        card.textContent = `ID: ${card.id}, Strength: ${currentStrength}, Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
+                    }
+                });
+            }, 900);
 
             // Update the UI to reflect the result of the wizard attack
             setTimeout(() => {
@@ -154,9 +158,20 @@ function resolveBattles() {
                 defenderCards = defenderCards.filter(card => card.parentNode !== null);
                 attackerCards = attackerCards.filter(card => card.parentNode !== null);
 
+                defenderCards.forEach(card => {
+                    if (card.getAttribute('data-type') === 'wizard') {
+                        card.classList.remove('highlight'); 
+                    }
+                });
+                attackerCards.forEach(card => {
+                    if (card.getAttribute('data-type') === 'wizard') {
+                        card.classList.remove('highlight'); 
+                    }
+                });
+
                 // Step 2: Close combat between adjacent cards
                 resolveCloseCombat(row, defenderCards, attackerCards);
-            }, 500 );
+            }, 900);
         }
     });
 }
@@ -203,7 +218,7 @@ function resolveCloseCombat(row, defenderCards, attackerCards) {
 
             // Recursive call to handle the next close combat after 2 seconds
             resolveCloseCombat(row, defenderCards, attackerCards);
-        }, 700);
+        }, 900);
     }
 }
 
