@@ -167,6 +167,10 @@ function resolveCloseCombat(row, defenderCards, attackerCards) {
         let defenderCard = defenderCards[defenderCards.length - 1]; // Peek at the last card of the defender
         let attackerCard = attackerCards[0]; // Peek at the first card of the attacker
 
+        // Add highlight effect
+        defenderCard.classList.add('highlight');
+        attackerCard.classList.add('highlight');
+
         let defenderStrength = parseInt(defenderCard.getAttribute('data-strength'));
         let attackerStrength = parseInt(attackerCard.getAttribute('data-strength'));
 
@@ -174,6 +178,10 @@ function resolveCloseCombat(row, defenderCards, attackerCards) {
         const attackerType = attackerCard.getAttribute('data-type');
 
         setTimeout(() => {
+            // Remove the highlight effect after 500ms
+            defenderCard.classList.remove('highlight');
+            attackerCard.classList.remove('highlight');
+
             if (defenderStrength > attackerStrength) {
                 defenderStrength -= attackerStrength;
                 defenderCard.setAttribute('data-strength', defenderStrength);
@@ -195,7 +203,8 @@ function resolveCloseCombat(row, defenderCards, attackerCards) {
 
             // Recursive call to handle the next close combat after 2 seconds
             resolveCloseCombat(row, defenderCards, attackerCards);
-        }, 500);
+        }, 700);
     }
 }
+
 

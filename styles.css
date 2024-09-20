@@ -71,3 +71,9 @@ button {
     font-size: 16px;
     cursor: pointer;
 }
+
+.highlight {
+    border: 2px solid yellow;
+    box-shadow: 0 0 10px yellow;
+    transition: all 0.3s ease;
+}
