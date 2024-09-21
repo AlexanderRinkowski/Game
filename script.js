@@ -19,10 +19,10 @@ function drop(ev) {
     var data = ev.dataTransfer.getData("text");
     var card = document.getElementById(data);
 
-    const cardPlayer = card.classList.contains('player-one') ? 1 : 2;
+    const cardPlayer = card.classList.contains('player-one') ? 1 : 2;  // if yes 1 else 2
 
     if (cardPlayer === currentPlayer) {
-        if (ev.target.className.includes("row") || ev.target.className.includes("card")) {
+        if (ev.target.className.includes("row")) {
             ev.target.appendChild(card);
         }
     }
