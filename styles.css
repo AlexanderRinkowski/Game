@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    height: 80vh;
+    height: 100vh;
 }
 
 .main-container {
@@ -14,18 +14,20 @@ body {
 }
 
 .row {
+    width: 60%;
+    height: 25%;
     flex: 1;
     border: 2px solid #ccc;
     margin: 10px 0;
     padding: 10px;
     display: flex;
     flex-wrap: wrap;
-    min-height: 100px;
     background-color: #f9f9f9;
 }
 
 .hand-container {
     width: 20%;
+    height: 100%;
     padding: 20px;
     border-left: 2px solid #ccc;
     display: flex;
@@ -35,8 +37,8 @@ body {
 }
 
 .card {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     margin: 10px;
     color: rgb(0, 0, 0);
     border: 2px solid black;
