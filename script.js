@@ -49,11 +49,11 @@ function createNewCardForPlayer(player) {
 
     if (player === 1) {
         newCard.classList.add("player-one");
-        const playerOneHand = document.querySelector(".hand-container:nth-child(2)");
+        const playerOneHand = document.querySelector(".hand-container.player-one");
         playerOneHand.insertBefore(newCard, playerOneHand.children[1]); // Insert after <h2> element
     } else {
         newCard.classList.add("player-two");
-        const playerTwoHand = document.querySelector(".hand-container:nth-child(2)");
+        const playerTwoHand = document.querySelector(".hand-container.player-two");
         playerTwoHand.insertBefore(newCard, playerTwoHand.children[1]); // Insert after <h2> element
     }
 }
@@ -63,16 +63,16 @@ function endTurn() {
 
     if (currentPlayer === 1) {
         currentPlayer = 2;
-        document.querySelectorAll('.player-one').forEach(card => card.setAttribute('draggable', 'false'));
-        document.querySelectorAll('.player-two').forEach(card => card.setAttribute('draggable', 'true'));
+        document.querySelectorAll('.card.player-one').forEach(card => card.setAttribute('draggable', 'false'));
+        document.querySelectorAll('.card.player-two').forEach(card => card.setAttribute('draggable', 'true'));
         document.querySelectorAll('.hand-container button')[0].disabled = true;
         document.querySelectorAll('.hand-container button')[1].disabled = false;
 
         createNewCardForPlayer(2);
     } else {
         currentPlayer = 1;
-        document.querySelectorAll('.player-one').forEach(card => card.setAttribute('draggable', 'true'));
-        document.querySelectorAll('.player-two').forEach(card => card.setAttribute('draggable', 'false'));
+        document.querySelectorAll('.card.player-one').forEach(card => card.setAttribute('draggable', 'true'));
+        document.querySelectorAll('.card.player-two').forEach(card => card.setAttribute('draggable', 'false'));
         document.querySelectorAll('.hand-container button')[0].disabled = false;
         document.querySelectorAll('.hand-container button')[1].disabled = true;
 

@@ -38,7 +38,8 @@ body {
     width: 80px;
     height: 80px;
     margin: 10px;
-    color: white;
+    color: rgb(0, 0, 0);
+    border: 2px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,11 +53,11 @@ body {
 }
 
 .player-one {
-    background-color: #4CAF50; /* Green for Player One */
+    background-color: #cec59f; /* Green for Player One */
 }
 
 .player-two {
-    background-color: #FF5733; /* Orange for Player Two */
+    background-color: #eaa495; /* Orange for Player Two */
 }
 
 h2 {
