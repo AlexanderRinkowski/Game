@@ -53,7 +53,7 @@ function createNewCardForPlayer(player) {
         playerOneHand.insertBefore(newCard, playerOneHand.children[1]); // Insert after <h2> element
     } else {
         newCard.classList.add("player-two");
-        const playerTwoHand = document.querySelector(".hand-container:nth-child(3)");
+        const playerTwoHand = document.querySelector(".hand-container:nth-child(2)");
         playerTwoHand.insertBefore(newCard, playerTwoHand.children[1]); // Insert after <h2> element
     }
 }
