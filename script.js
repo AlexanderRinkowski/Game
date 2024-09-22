@@ -43,7 +43,7 @@ function createNewCardForPlayer(player) {
     newCard.setAttribute("ondragstart", "drag(event)");
     newCard.setAttribute("data-strength", strength); // Set strength as a data attribute
     newCard.setAttribute("data-type", cardType); // Set type as a data attribute
-    newCard.textContent = `ID: ${cardId}, Strength: ${strength}, Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`; // Set text content with type
+    newCard.innerHTML = `ID: ${cardId}<br>Strength: ${strength}<br>Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`; // Set text content with type
 
     cardCounter++;
 
@@ -135,7 +135,7 @@ function resolveBattles() {
                         row.removeChild(card);
                     } else {
                         card.setAttribute('data-strength', currentStrength);
-                        card.textContent = `ID: ${card.id}, Strength: ${currentStrength}, Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
+                        card.innerHTML = `ID: ${card.id}<br>Strength: ${currentStrength}<br>Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
                     }
                 });
 
@@ -147,7 +147,7 @@ function resolveBattles() {
                         row.removeChild(card);
                     } else {
                         card.setAttribute('data-strength', currentStrength);
-                        card.textContent = `ID: ${card.id}, Strength: ${currentStrength}, Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
+                        card.innerHTML = `ID: ${card.id}<br>Strength: ${currentStrength}<br>Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
                     }
                 });
             }, 900);
@@ -200,13 +200,13 @@ function resolveCloseCombat(row, defenderCards, attackerCards) {
             if (defenderStrength > attackerStrength) {
                 defenderStrength -= attackerStrength;
                 defenderCard.setAttribute('data-strength', defenderStrength);
-                defenderCard.textContent = `ID: ${defenderCard.id}, Strength: ${defenderStrength}, Type: ${defenderType.charAt(0).toUpperCase() + defenderType.slice(1)}`;
+                defenderCard.innerHTML = `ID: ${defenderCard.id}<br>Strength: ${defenderStrength}<br>Type: ${defenderType.charAt(0).toUpperCase() + defenderType.slice(1)}`;
                 attackerCards.shift(); // Remove the defeated attacker card
                 row.removeChild(attackerCard);
             } else if (attackerStrength > defenderStrength) {
                 attackerStrength -= defenderStrength;
                 attackerCard.setAttribute('data-strength', attackerStrength);
-                attackerCard.textContent = `ID: ${attackerCard.id}, Strength: ${attackerStrength}, Type: ${attackerType.charAt(0).toUpperCase() + attackerType.slice(1)}`;
+                attackerCard.innerHTML = `ID: ${attackerCard.id}<br>Strength: ${attackerStrength}<br>Type: ${attackerType.charAt(0).toUpperCase() + attackerType.slice(1)}`;
                 defenderCards.pop(); // Remove the defeated defender card
                 row.removeChild(defenderCard);
             } else {
