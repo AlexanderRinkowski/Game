@@ -49,11 +49,11 @@ function createNewCardForPlayer(player) {
 
     if (player === 1) {
         newCard.classList.add("player-one");
-        const playerOneHand = document.querySelector(".hand-container.player-one");
+        const playerOneHand = document.querySelector(".hand-container.player-one .hand-cards");
         playerOneHand.insertBefore(newCard, playerOneHand.children[1]); // Insert after <h2> element
     } else {
         newCard.classList.add("player-two");
-        const playerTwoHand = document.querySelector(".hand-container.player-two");
+        const playerTwoHand = document.querySelector(".hand-container.player-two .hand-cards");
         playerTwoHand.insertBefore(newCard, playerTwoHand.children[1]); // Insert after <h2> element
     }
 }
