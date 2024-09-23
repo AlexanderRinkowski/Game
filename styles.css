@@ -6,6 +6,25 @@ body {
     height: 100vh;
 }
 
+/* Enforce no text selection on all elements */
+* {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;         /* Standard syntax */
+    cursor: default;           /* Enforce the regular cursor */
+}
+
+/* Ensure that pseudo-elements also inherit these properties */
+*::before,
+*::after {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;         /* Standard syntax */
+    cursor: default;           /* Enforce the regular cursor */
+}
+
 .main-container {
     display: flex;
     flex-direction: column;
@@ -38,8 +57,8 @@ body {
 }
 
 .card {
-    width: 60px;
-    height: 30px;
+    width: 100px;
+    height: 80px;
     margin: 2px;
     color: rgb(0, 0, 0);
     border: 2px solid black;
@@ -50,6 +69,7 @@ body {
     cursor: pointer;
     padding: 1px;
     border-radius: 8px;
+    user-select: none;
 }
 
 .card:hover {
