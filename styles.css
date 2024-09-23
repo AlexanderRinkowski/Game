@@ -43,8 +43,8 @@ body {
         /* boxmodel properties */
         box-sizing: border-box; /* margin (excluded) border padding content (included) */
         min-height: 400px;
-        min-width: 150px;
-        border: 5px solid black;
+        min-width: 120px;
+        border: 5px solid rgb(147, 71, 26);
         /* properties as child */
         /* properties as parent */
         display: flex;
@@ -70,6 +70,8 @@ body {
             flex-basis: 10%;
             box-sizing: border-box;
             border: 1px solid black;
+            border-radius: 5px;
+            padding: 3px;
         }
 
         .hand-container button {
@@ -92,16 +94,21 @@ body {
     }
 
         .row .card {
-            /* properties as child */
-            flex-basis: 12%;
             height: 90px;
             width: 60px;
+            font-size: 0.5em;
+            /* boxmodel properties */
+            box-sizing: border-box;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 3px;
+            /* properties as child */
+            flex-basis: 12%;
         }
 
         .row h2 {
             flex-basis: 16%;
             font-size: 1.5em;
-            border: 1px solid green;
         }
 
 /* general styles */

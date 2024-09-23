@@ -8,16 +8,16 @@
 </head>
 <body>
     <div class="board-container">
-        <div id="water" class="row" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div id="water" class="row" data-element="water">
             <h2>Water</h2>
         </div>
-        <div id="fire" class="row" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div id="fire" class="row" data-element="fire">
             <h2>Fire</h2>
         </div>
-        <div id="air" class="row" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div id="air" class="row" data-element="air">
             <h2>Air</h2>
         </div>
-        <div id="earth" class="row" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div id="earth" class="row" data-element="earth">
             <h2>Earth</h2>
         </div>
     </div>
@@ -25,25 +25,25 @@
     <div class="hand-container player-one">
         <h2>Player 1</h2>
         <div class="hand-cards">
-            <div id="card1" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="3" data-type="warrior">ID: card1<br>Strength: 3<br>Type: Warrior</div>
-            <div id="card2" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="2" data-type="wizard">ID: card2<br>Strength: 2<br>Type: Wizard</div>
-            <div id="card3" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="5" data-type="warrior">ID: card3<br>Strength: 5<br>Type: Warrior</div>
-            <div id="card4" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="1" data-type="wizard">ID: card4<br>Strength: 1<br>Type: Wizard</div>
-            <div id="card5" class="card player-one" draggable="true" ondragstart="drag(event)" data-strength="4" data-type="warrior">ID: card5<br>Strength: 4<br>Type: Warrior</div>
+            <div id="card1" class="card player-one" draggable="true" data-strength="3" data-type="warrior">ID: card1<br>Strength: 3<br>Type: Warrior</div>
+            <div id="card2" class="card player-one" draggable="true" data-strength="2" data-type="wizard">ID: card2<br>Strength: 2<br>Type: Wizard</div>
+            <div id="card3" class="card player-one" draggable="true" data-strength="5" data-type="warrior">ID: card3<br>Strength: 5<br>Type: Warrior</div>
+            <div id="card4" class="card player-one" draggable="true" data-strength="1" data-type="wizard">ID: card4<br>Strength: 1<br>Type: Wizard</div>
+            <div id="card5" class="card player-one" draggable="true" data-strength="4" data-type="warrior">ID: card5<br>Strength: 4<br>Type: Warrior</div>
         </div>
-        <button onclick="endTurn()">End Turn</button>
+        <button onclick="endTurn('player-one')">End Turn</button>
     </div>
 
     <div class="hand-container player-two">
         <h2>Player 2</h2>
         <div class="hand-cards">
-            <div id="card6" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="4" data-type="warrior">ID: card6<br>Strength: 4<br>Type: Warrior</div>
-            <div id="card7" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="1" data-type="wizard">ID: card7<br>Strength: 1<br>Type: Wizard</div>
-            <div id="card8" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="3" data-type="warrior">ID: card8<br>Strength: 3<br>Type: Warrior</div>
-            <div id="card9" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="5" data-type="warrior">ID: card9<br>Strength: 5<br>Type: Warrior</div>
-            <div id="card10" class="card player-two" draggable="false" ondragstart="drag(event)" data-strength="2" data-type="wizard">ID: card10<br>Strength: 2<br>Type: Wizard</div>
+            <div id="card6" class="card player-two" draggable="false" data-strength="4" data-type="warrior">ID: card6<br>Strength: 4<br>Type: Warrior</div>
+            <div id="card7" class="card player-two" draggable="false" data-strength="1" data-type="wizard">ID: card7<br>Strength: 1<br>Type: Wizard</div>
+            <div id="card8" class="card player-two" draggable="false" data-strength="3" data-type="warrior">ID: card8<br>Strength: 3<br>Type: Warrior</div>
+            <div id="card9" class="card player-two" draggable="false" data-strength="5" data-type="warrior">ID: card9<br>Strength: 5<br>Type: Warrior</div>
+            <div id="card10" class="card player-two" draggable="false" data-strength="2" data-type="wizard">ID: card10<br>Strength: 2<br>Type: Wizard</div>
         </div>
-        <button onclick="endTurn()" disabled>End Turn</button>
+        <button onclick="endTurn('player-two')" disabled>End Turn</button>
     </div>
 
     <script src="script.js"></script>

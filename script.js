@@ -1,32 +1,115 @@
-let currentPlayer = 1;
-let cardCounter = 11; // Start counter at 11 because 10 cards already exist
+let currentPlayer = 'player-one'; // Track the current player
 
-function allowDrop(ev) {
-    ev.preventDefault(); // Allow dropping by preventing default behavior
+function initializeDragAndDrop() { // initialize drag/drop & touch event listeners
+    // enable drags
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => { 
+        card.addEventListener('dragstart', dragStart);
+        card.addEventListener('touchstart', touchStart, { passive: false }); // passive: false to prevent default behavior
+        card.addEventListener('touchmove', touchMove, { passive: false });
+        card.addEventListener('touchend', touchEnd, { passive: false }); // touch end works different from drop - see function touchEnd
+    });
+    
+    // enable drops
+    const rows = document.querySelectorAll('.row');
+    rows.forEach(row => { 
+        row.addEventListener('dragover', dragOver);
+        row.addEventListener('drop', drop);
+    });
 }
 
-function drag(ev) {
-    const card = ev.target;
-    const cardPlayer = card.classList.contains('player-one') ? 1 : 2;
+function dragStart(e) { // drag a card if its the current players'
+    const card = e.target;
+    card.classList.contains(currentPlayer) ? e.dataTransfer.setData('text/plain', card.id) : e.preventDefault(); // Prevent dragging if it's not the player's card
+}
 
-    if (cardPlayer === currentPlayer) {
-        ev.dataTransfer.setData("text", ev.target.id);
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function drop(e) { // drop the card if its on a row
+    e.preventDefault();
+    const cardId = e.dataTransfer.getData('text/plain'); // data was set to card.id
+    const card = document.getElementById(cardId);
+    e.target.classList.contains('row') ? e.target.appendChild(card) : console.log("Not a valid drop target.");
+}
+
+function touchStart(e) { // start dragging card if current players
+    e.preventDefault();
+    const card = e.target;
+    if (card.classList.contains(currentPlayer)) {
+        // bring to front
+        card.style.position = 'absolute';
+        card.style.zIndex = '1000'; 
+        
+        // update card position
+        const touch = e.targetTouches[0];
+        card.style.left = `${touch.pageX - card.offsetWidth / 2}px`;
+        card.style.top = `${touch.pageY - card.offsetHeight / 2}px`;
+    } 
+}
+
+function touchMove(e) { // keep dragging (updating displayed position of card) if current players 
+    e.preventDefault(); 
+    const card = e.target;
+    if (card.classList.contains(currentPlayer)) {
+        // update card position
+        const touch = e.targetTouches[0];
+        card.style.left = `${touch.pageX - card.offsetWidth / 2}px`;
+        card.style.top = `${touch.pageY - card.offsetHeight / 2}px`;
     }
 }
 
-function drop(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    var card = document.getElementById(data);
-
-    const cardPlayer = card.classList.contains('player-one') ? 1 : 2;  // if yes 1 else 2
-
-    if (cardPlayer === currentPlayer) {
-        if (ev.target.className.includes("row")) {
-            ev.target.appendChild(card);
+function touchEnd(e) { // stop dragging (reset positioning) & if drag stopped over row add card
+    e.preventDefault();
+    const card = e.target;
+    if (card.classList.contains(currentPlayer)) {
+        // reset that card was brought to front
+        card.style.position = '';
+        card.style.zIndex = '';
+        
+        // Check if the card is being dropped onto a valid row
+        const touch = e.changedTouches[0];
+        const dropTargets = document.elementsFromPoint(touch.clientX, touch.clientY);
+        for (let target of dropTargets) {
+            if (target.classList.contains('row')) {
+                target.appendChild(card);
+                break;
+            }
         }
     }
 }
+
+window.onload = initializeDragAndDrop;
+
+
+
+// Function to handle turn ending logic
+function endTurn(player) {
+    currentPlayer = player === 'player-one' ? 'player-two' : 'player-one'; // Switch current player
+
+    // Disable the current player's cards
+    const playerCards = document.querySelectorAll(`.${player} .card`);
+    playerCards.forEach(card => {
+        card.setAttribute('draggable', 'false');
+    });
+
+    // Enable the next player's cards
+    const nextPlayerCards = document.querySelectorAll(`.${currentPlayer} .card`);
+    nextPlayerCards.forEach(card => {
+        card.setAttribute('draggable', 'true');
+    });
+
+    // Switch buttons
+    document.querySelector(`.${player} button`).setAttribute('disabled', true);
+    document.querySelector(`.${currentPlayer} button`).removeAttribute('disabled');
+}
+
+// Initialize the drag-and-drop functionality on page load
+
+
+/*
+
 
 function createNewCardForPlayer(player) {
     const newCard = document.createElement("div");
@@ -79,7 +162,7 @@ function endTurn() {
         createNewCardForPlayer(1);
     }
 }
-
+*/
 function resolveBattles() {
     const rows = document.querySelectorAll('.row');
     rows.forEach((row) => {
@@ -150,14 +233,12 @@ function resolveBattles() {
                         card.innerHTML = `ID: ${card.id}<br>Strength: ${currentStrength}<br>Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
                     }
                 });
-            }, 900);
 
-            // Update the UI to reflect the result of the wizard attack
-            setTimeout(() => {
-                // Remove wizards with zero or negative strength
+                // Filter out cards that have been removed from the DOM
                 defenderCards = defenderCards.filter(card => card.parentNode !== null);
                 attackerCards = attackerCards.filter(card => card.parentNode !== null);
 
+                // Remove highlights from wizards
                 defenderCards.forEach(card => {
                     if (card.getAttribute('data-type') === 'wizard') {
                         card.classList.remove('highlight'); 
@@ -171,6 +252,7 @@ function resolveBattles() {
 
                 // Step 2: Close combat between adjacent cards
                 resolveCloseCombat(row, defenderCards, attackerCards);
+
             }, 900);
         }
     });
@@ -193,7 +275,7 @@ function resolveCloseCombat(row, defenderCards, attackerCards) {
         const attackerType = attackerCard.getAttribute('data-type');
 
         setTimeout(() => {
-            // Remove the highlight effect after 500ms
+            // Remove the highlight effect after 900ms
             defenderCard.classList.remove('highlight');
             attackerCard.classList.remove('highlight');
 
@@ -216,10 +298,14 @@ function resolveCloseCombat(row, defenderCards, attackerCards) {
                 row.removeChild(attackerCard);
             }
 
-            // Recursive call to handle the next close combat after 2 seconds
-            resolveCloseCombat(row, defenderCards, attackerCards);
+            // Filter out cards that have been removed from the DOM
+            defenderCards = defenderCards.filter(card => card.parentNode !== null);
+            attackerCards = attackerCards.filter(card => card.parentNode !== null);
+
+            // Recursive call to handle the next close combat after 900ms
+            setTimeout(() => {
+                resolveCloseCombat(row, defenderCards, attackerCards);
+            }, 900);
         }, 900);
     }
 }
-
-
