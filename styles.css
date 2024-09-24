@@ -69,7 +69,6 @@ body {
             font-size: 0.1em;
             flex-basis: 10%;
             box-sizing: border-box;
-            border: 1px solid black;
             border-radius: 5px;
             padding: 3px;
         }
@@ -99,7 +98,6 @@ body {
             font-size: 0.5em;
             /* boxmodel properties */
             box-sizing: border-box;
-            border: 1px solid black;
             border-radius: 5px;
             padding: 3px;
             /* properties as child */
@@ -113,27 +111,33 @@ body {
 
 /* general styles */
 
-.card {
-    /* properties as parent */
+.card-hover:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.player-one.card{
+    display: flex;/* Green for Player One */
     background-color: antiquewhite;
 }
 
-.card:hover {
-    opacity: 0.9;
-}
-
-.player-one {
-    display: flex;/* Green for Player One */
-}
-
-.player-two {
+.player-two.card {
     display: flex;/* Orange for Player Two */
+    background-color: lightblue;
 }
 
 button {
     cursor: pointer;
 }
 
-.highlight {
-    border: 2px solid rgb(255, 215, 0);
+.card {
+    border: 1px solid black;
+}
+
+.card.highlight-attack {
+    border-width: 3px;
+}
+
+.card.highlight-damage {
+    border-color: rgb(210, 0, 0);
 }
