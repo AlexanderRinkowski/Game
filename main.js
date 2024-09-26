@@ -74,6 +74,89 @@ const Utils = {
         }
     }
 }
+const CombatUtils = {
+    resolveWizardCombat(row, defenderCards, attackerCards) {
+        let defenderWizardAttack = this.calculateWizardAttack(defenderCards);
+        let attackerWizardAttack = this.calculateWizardAttack(attackerCards);
+        setTimeout(() => {
+            this.applyWizardAttack(row, defenderCards, attackerWizardAttack);
+            this.applyWizardAttack(row, attackerCards, defenderWizardAttack);
+        }, 900);
+    },
+    calculateWizardAttack(cards) {
+        let wizardAttack = 0;
+        cards.forEach(card => {
+            if (card.getAttribute('data-type') === 'wizard') {
+                wizardAttack = Math.max(wizardAttack, parseInt(card.getAttribute('data-strength')));
+            }
+        });
+        return wizardAttack;
+    },
+    applyWizardAttack(row, cards, opponentWizardAttack) {
+        cards.forEach(card => {
+            let currentStrength = parseInt(card.getAttribute('data-strength'));
+            const cardType = card.getAttribute('data-type');
+            currentStrength -= opponentWizardAttack;
+            if (currentStrength <= 0) {
+                row.removeChild(card);
+            } else {
+                card.setAttribute('data-strength', currentStrength);
+                card.innerHTML = `ID: ${card.id}<br>Strength: ${currentStrength}<br>Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
+            }
+        });
+    },
+    resolveCloseCombat(row, defenderCards, attackerCards) {
+        if (defenderCards.length > 0 && attackerCards.length > 0) {
+            // Take the last card from the defender and the first card from the attacker
+            let defenderCard = defenderCards[defenderCards.length - 1]; // Peek at the last card of the defender
+            let attackerCard = attackerCards[0]; // Peek at the first card of the attacker
+    
+            // Add highlight effect
+            defenderCard.classList.add('highlight');
+            attackerCard.classList.add('highlight');
+    
+            let defenderStrength = parseInt(defenderCard.getAttribute('data-strength'));
+            let attackerStrength = parseInt(attackerCard.getAttribute('data-strength'));
+    
+            const defenderType = defenderCard.getAttribute('data-type');
+            const attackerType = attackerCard.getAttribute('data-type');
+    
+            setTimeout(() => {
+                // Remove the highlight effect after 900ms
+                defenderCard.classList.remove('highlight');
+                attackerCard.classList.remove('highlight');
+    
+                if (defenderStrength > attackerStrength) {
+                    defenderStrength -= attackerStrength;
+                    defenderCard.setAttribute('data-strength', defenderStrength);
+                    defenderCard.innerHTML = `ID: ${defenderCard.id}<br>Strength: ${defenderStrength}<br>Type: ${defenderType.charAt(0).toUpperCase() + defenderType.slice(1)}`;
+                    attackerCards.shift(); // Remove the defeated attacker card
+                    row.removeChild(attackerCard);
+                } else if (attackerStrength > defenderStrength) {
+                    attackerStrength -= defenderStrength;
+                    attackerCard.setAttribute('data-strength', attackerStrength);
+                    attackerCard.innerHTML = `ID: ${attackerCard.id}<br>Strength: ${attackerStrength}<br>Type: ${attackerType.charAt(0).toUpperCase() + attackerType.slice(1)}`;
+                    defenderCards.pop(); // Remove the defeated defender card
+                    row.removeChild(defenderCard);
+                } else {
+                    defenderCards.pop(); // Remove the defeated defender card
+                    attackerCards.shift(); // Remove the defeated attacker card
+                    row.removeChild(defenderCard);
+                    row.removeChild(attackerCard);
+                }
+    
+                // Filter out cards that have been removed from the DOM
+                defenderCards = defenderCards.filter(card => card.parentNode !== null);
+                attackerCards = attackerCards.filter(card => card.parentNode !== null);
+    
+                // Recursive call to handle the next close combat after 900ms
+                setTimeout(() => {
+                    CombatUtils.resolveCloseCombat(row, defenderCards, attackerCards);
+                }, 900);
+            }, 900);
+        }
+    }
+}
 
 let currentPlayer = 'player-one'; // Track the current player
 let currentOpponent = 'player-two';
@@ -91,7 +174,8 @@ function createNewCardForPlayer(player) {
     // generate random values
     const strength = Math.floor(Math.random() * 5) + 1; // Generate random strength between 1 and 5
     const cardId = "card" + cardCounter; // Generate unique card ID
-    const cardType = Math.random() < 0.5 ? 'wizard' : 'warrior';
+    const cardTypes = ['wizard', 'warrior', 'apprentice', 'farmer'];
+    const cardType = cardTypes[Math.floor(Math.random() * cardTypes.length)];
     // set card values
     newCard.setAttribute("id", cardId);
     newCard.classList.add("card");
@@ -109,6 +193,18 @@ function createNewCardForPlayer(player) {
     const playerHand = document.querySelector(`.hand-container.${player} .hand-cards`);
     playerHand.insertBefore(newCard, playerHand.children[0]); 
     cardCounter++;
+}
+function separatePlayerCards(cards) {
+    let playerOneCards = [];
+    let playerTwoCards = [];
+    cards.forEach(card => {
+        if (card.classList.contains('player-one')) {
+            playerOneCards.push(card);
+        } else if (card.classList.contains('player-two')) {
+            playerTwoCards.push(card);
+        }
+    });
+    return { playerOneCards, playerTwoCards };
 }
 
 function endTurnButton() {
@@ -129,142 +225,41 @@ function endTurnButton() {
         card.classList.add('card-hover')
     });
     document.querySelector(`.${currentPlayer} button`).removeAttribute('disabled');
-
-    resolveBattles()
-}
-
-
-function resolveBattles() {
+    // resolve board state
     const rows = document.querySelectorAll('.row');
     rows.forEach((row) => {
-        const cards = Array.from(row.children).filter(child => child.classList.contains('card'));
+        // Combat
+        let cards = Array.from(row.children).filter(child => child.classList.contains('card'));
         if (cards.length > 1) {
-            let playerOneCards = [];
-            let playerTwoCards = [];
-
-            // Separate the cards into two arrays: one for each player
-            cards.forEach(card => {
-                if (card.classList.contains('player-one')) {
-                    playerOneCards.push(card);
-                } else if (card.classList.contains('player-two')) {
-                    playerTwoCards.push(card);
-                }
-            });
-
-            // Determine who is the defender based on the first card in the row
+            const { playerOneCards, playerTwoCards } = separatePlayerCards(cards);            
+            // first card in a row determines who is defender
             let defenderCards, attackerCards;
-            if (cards[0].classList.contains('player-one')) {
-                defenderCards = playerOneCards;
-                attackerCards = playerTwoCards;
-            } else {
-                defenderCards = playerTwoCards;
-                attackerCards = playerOneCards;
-            }
-
-            // Step 1: Wizards attack simultaneously
-            let defenderWizardAttack = 0;
-            let attackerWizardAttack = 0;
-            defenderCards.forEach(card => { // get attack value & highlight
-                if (card.getAttribute('data-type') === 'wizard') { 
-                    defenderWizardAttack = Math.max(defenderWizardAttack, parseInt(card.getAttribute('data-strength'))); 
-                    card.classList.add('highlight-attack'); 
-                }
-            });
-            attackerCards.forEach(card => { // get attack value & highlight
-                if (card.getAttribute('data-type') === 'wizard') {
-                    attackerWizardAttack = Math.max(attackerWizardAttack, parseInt(card.getAttribute('data-strength')));
-                    card.classList.add('highlight-attack'); 
-                }
-            });
-
-            setTimeout(() => { // Apply the Wizards' attacks
-                defenderCards.forEach(card => {
-                    let currentStrength = parseInt(card.getAttribute('data-strength'));
-                    const cardType = card.getAttribute('data-type');
-                    currentStrength -= attackerWizardAttack;
-                    if (currentStrength <= 0) {
-                        row.removeChild(card);
-                    } else {
-                        card.setAttribute('data-strength', currentStrength);
-                        card.innerHTML = `ID: ${card.id}<br>Strength: ${currentStrength}<br>Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
-                    }
-                });
-                attackerCards.forEach(card => {
-                    let currentStrength = parseInt(card.getAttribute('data-strength'));
-                    const cardType = card.getAttribute('data-type');
-                    currentStrength -= defenderWizardAttack;
-                    if (currentStrength <= 0) {
-                        row.removeChild(card);
-                    } else {
-                        card.setAttribute('data-strength', currentStrength);
-                        card.innerHTML = `ID: ${card.id}<br>Strength: ${currentStrength}<br>Type: ${cardType.charAt(0).toUpperCase() + cardType.slice(1)}`;
-                    }
-                });
-
-                // Filter out cards that have been removed from the DOM
-                defenderCards = defenderCards.filter(card => card.parentNode !== null);
-                attackerCards = attackerCards.filter(card => card.parentNode !== null);
-                
-            }, 900);
-
-            // Remove highlights from wizards
-            defenderCards.forEach(card => { if (card.getAttribute('data-type') === 'wizard') { card.classList.remove('highlight-attack'); }});
-            attackerCards.forEach(card => { if (card.getAttribute('data-type') === 'wizard') { card.classList.remove('highlight-attack'); }});
-
-            // Step 2: Close combat between adjacent cards
-            resolveCloseCombat(row, defenderCards, attackerCards);
-        }
-    });
-}
-
-function resolveCloseCombat(row, defenderCards, attackerCards) {
-    if (defenderCards.length > 0 && attackerCards.length > 0) {
-        // Take the last card from the defender and the first card from the attacker
-        let defenderCard = defenderCards[defenderCards.length - 1]; // Peek at the last card of the defender
-        let attackerCard = attackerCards[0]; // Peek at the first card of the attacker
-
-        // Add highlight effect
-        defenderCard.classList.add('highlight');
-        attackerCard.classList.add('highlight');
-
-        let defenderStrength = parseInt(defenderCard.getAttribute('data-strength'));
-        let attackerStrength = parseInt(attackerCard.getAttribute('data-strength'));
-
-        const defenderType = defenderCard.getAttribute('data-type');
-        const attackerType = attackerCard.getAttribute('data-type');
-
-        setTimeout(() => {
-            // Remove the highlight effect after 900ms
-            defenderCard.classList.remove('highlight');
-            attackerCard.classList.remove('highlight');
-
-            if (defenderStrength > attackerStrength) {
-                defenderStrength -= attackerStrength;
-                defenderCard.setAttribute('data-strength', defenderStrength);
-                defenderCard.innerHTML = `ID: ${defenderCard.id}<br>Strength: ${defenderStrength}<br>Type: ${defenderType.charAt(0).toUpperCase() + defenderType.slice(1)}`;
-                attackerCards.shift(); // Remove the defeated attacker card
-                row.removeChild(attackerCard);
-            } else if (attackerStrength > defenderStrength) {
-                attackerStrength -= defenderStrength;
-                attackerCard.setAttribute('data-strength', attackerStrength);
-                attackerCard.innerHTML = `ID: ${attackerCard.id}<br>Strength: ${attackerStrength}<br>Type: ${attackerType.charAt(0).toUpperCase() + attackerType.slice(1)}`;
-                defenderCards.pop(); // Remove the defeated defender card
-                row.removeChild(defenderCard);
-            } else {
-                defenderCards.pop(); // Remove the defeated defender card
-                attackerCards.shift(); // Remove the defeated attacker card
-                row.removeChild(defenderCard);
-                row.removeChild(attackerCard);
-            }
-
+            [defenderCards, attackerCards] = cards[0].classList.contains('player-one') ? [playerOneCards, playerTwoCards] : [playerTwoCards, playerOneCards];
+            CombatUtils.resolveWizardCombat(row, defenderCards, attackerCards)
             // Filter out cards that have been removed from the DOM
             defenderCards = defenderCards.filter(card => card.parentNode !== null);
             attackerCards = attackerCards.filter(card => card.parentNode !== null);
+            CombatUtils.resolveCloseCombat(row, defenderCards, attackerCards);
+        }
+        // Farming on remaining cards 
+        cards = Array.from(row.children).filter(child => child.classList.contains('card'));
+        if (cards.length > 0) {
+            cards.forEach(card => {
+                const cardType = card.getAttribute('data-type');
+                const cardStrength = parseInt(card.getAttribute('data-strength'));
+                let playerSelector = card.classList.contains('player-one') ? '.player-one': 'player-two';
+                if (cardType === 'apprentice') {
+                    // Add to magic count
+                    const magicElement = document.querySelector(`.hand-container${playerSelector} .magic`);
+                    const currentMagic = parseInt(magicElement.textContent);
+                    magicElement.textContent = currentMagic + cardStrength;
+                } else if (cardType === 'farmer') {
+                    // Add to coin count
+                    const coinElement = document.querySelector(`.hand-container${playerSelector} .coin`);
+                    const currentCoin = parseInt(coinElement.textContent);
+                    coinElement.textContent = currentCoin + cardStrength;
+                }
+            });
+        } 
+    });}
 
-            // Recursive call to handle the next close combat after 900ms
-            setTimeout(() => {
-                resolveCloseCombat(row, defenderCards, attackerCards);
-            }, 900);
-        }, 900);
-    }
-}
