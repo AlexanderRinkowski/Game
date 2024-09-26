@@ -126,9 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => { 
             card.addEventListener('dragstart', dragUtils.dragStart);
-            card.addEventListener('touchstart', Utils.touchStart, { passive: false }); // passive: false to prevent default behavior
-            card.addEventListener('touchmove', Utils.touchMove, { passive: false });
-            card.addEventListener('touchend', Utils.touchEnd, { passive: false }); // touch end works different from drop - see function touchEnd
+            card.addEventListener('touchstart', touchUtils.touchStart, { passive: false }); // passive: false to prevent default behavior
+            card.addEventListener('touchmove', touchUtils.touchMove, { passive: false });
+            card.addEventListener('touchend', (e) => touchUtils.touchEnd(e, ["water-cards", "fire-cards", "air-cards", "earth-cards"]), { passive: false }); // touch end works different from drop - see function touchEnd
         });
         
         // enable drops
