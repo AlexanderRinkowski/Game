@@ -5,7 +5,8 @@ const updateDOM = {
     cardToHTML(card) {
         const cardElement = document.createElement('div');
         cardElement.id = `card-${card.id}`;
-        cardElement.className = 'card player-one';
+        const playerCSS = card.owner === 'player1' ? 'player-one' : 'player-two'; 
+        cardElement.className = `card ${playerCSS}`;
         cardElement.innerHTML = `Strength: ${card.strength}<br>Type: ${card.cardType}`;
         cardElement.dataset.strength = card.strength;
         cardElement.dataset.cardType = card.cardType;
@@ -61,9 +62,6 @@ const dragUtils = {
     }
 }
 
-let currentPlayerCSS = 'player-one'; 
-let currentOpponentCSS = 'player-two';
-
 const touchUtils = {
     touchStart(e) { 
         e.preventDefault();
@@ -109,6 +107,8 @@ const touchUtils = {
     }
 }
 
+let currentPlayerCSS = 'player-one'; 
+let currentOpponentCSS = 'player-two';
 
 document.addEventListener('DOMContentLoaded', () => {
     const model = new GameModel();

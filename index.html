@@ -10,19 +10,19 @@
     <div class="board-container">
         <div id="water" class="row" data-element="water">
             <h2>Water</h2>
-            <div id="water-cards"></div>
+            <div id="water-cards" class="cards"></div>
         </div>
         <div id="fire" class="row" data-element="fire">
             <h2>Fire</h2>
-            <div id="fire-cards"></div>
+            <div id="fire-cards" class="cards"></div>
         </div>
         <div id="air" class="row" data-element="air">
             <h2>Air</h2>
-            <div id="air-cards"></div>
+            <div id="air-cards" class="cards"></div>
         </div>
         <div id="earth" class="row" data-element="earth">
             <h2>Earth</h2>
-            <div id="earth-cards"></div>
+            <div id="earth-cards" class="cards"></div>
         </div>
     </div>
 
@@ -34,13 +34,7 @@
             <div>C:</div>
             <div class="coin">0</div>
         </div>
-        <div id="hand-cards-player1">
-            <div id="card1" class="card player-one card-hover" draggable="true" data-strength="3" data-type="warrior">ID: card1<br>Strength: 3<br>Type: Warrior</div>
-            <div id="card2" class="card player-one card-hover" draggable="true" data-strength="2" data-type="apprentice">ID: card2<br>Strength: 2<br>Type: Apprentice</div>
-            <div id="card3" class="card player-one card-hover" draggable="true" data-strength="5" data-type="warrior">ID: card3<br>Strength: 5<br>Type: Warrior</div>
-            <div id="card4" class="card player-one card-hover" draggable="true" data-strength="1" data-type="farmer">ID: card4<br>Strength: 1<br>Type: Farmer</div>
-            <div id="card5" class="card player-one card-hover" draggable="true" data-strength="4" data-type="warrior">ID: card5<br>Strength: 4<br>Type: Warrior</div>
-        </div>
+        <div id="hand-cards-player1"></div>
         <button>End Turn</button>
     </div>
 
@@ -52,16 +46,10 @@
             <div>C:</div>
             <div class="coin">0</div>
         </div>
-        <div id="hand-cards-player2">
-            <div id="card6" class="card player-two" draggable="false" data-strength="4" data-type="warrior">ID: card6<br>Strength: 4<br>Type: Warrior</div>
-            <div id="card7" class="card player-two" draggable="false" data-strength="1" data-type="farmer">ID: card7<br>Strength: 1<br>Type: Farmer</div>
-            <div id="card8" class="card player-two" draggable="false" data-strength="3" data-type="warrior">ID: card8<br>Strength: 3<br>Type: Warrior</div>
-            <div id="card9" class="card player-two" draggable="false" data-strength="5" data-type="warrior">ID: card9<br>Strength: 5<br>Type: Warrior</div>
-            <div id="card10" class="card player-two" draggable="false" data-strength="2" data-type="apprentice">ID: card10<br>Strength: 2<br>Type: Apprentice</div>
-        </div>
+        <div id="hand-cards-player2"></div>
         <button>End Turn</button>
     </div>
 
-    <script type="module" src="main.js"></script>
+    <script type="module" src="./controller.js"></script>
 </body>
 </html>
