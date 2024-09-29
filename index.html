@@ -9,19 +9,19 @@
 <body>
     <div class="board-container">
         <div id="water" class="row" data-element="water">
-            <h2>Water</h2>
+            <h2 id="water-info">Water</h2>
             <div id="water-cards" class="cards"></div>
         </div>
         <div id="fire" class="row" data-element="fire">
-            <h2>Fire</h2>
+            <h2 id="fire-info">Fire</h2>
             <div id="fire-cards" class="cards"></div>
         </div>
         <div id="air" class="row" data-element="air">
-            <h2>Air</h2>
+            <h2 id="air-info">Air</h2>
             <div id="air-cards" class="cards"></div>
         </div>
         <div id="earth" class="row" data-element="earth">
-            <h2>Earth</h2>
+            <h2 id="earth-info">Earth</h2>
             <div id="earth-cards" class="cards"></div>
         </div>
     </div>
@@ -30,24 +30,24 @@
         <h2>Player 1</h2>
         <div class="info">
             <div>M:</div>
-            <div class="magic">0</div>
+            <div id="player-one-info-magic" class="magic">0</div>
             <div>C:</div>
-            <div class="coin">0</div>
+            <div id="player-one-info-coin" class="coin">0</div>
         </div>
-        <div id="hand-cards-player1"></div>
-        <button>End Turn</button>
+        <div id="player-one-cards-hand"></div>
+        <button id="player-one-end-turn">End Turn</button>
     </div>
 
     <div class="hand-container player-two">
         <h2>Player 2</h2>
         <div class="info">
             <div>M:</div>
-            <div class="magic">0</div>
+            <div id="player-two-info-magic" class="magic">0</div>
             <div>C:</div>
-            <div class="coin">0</div>
+            <div id="player-two-info-coin" class="coin">0</div>
         </div>
-        <div id="hand-cards-player2"></div>
-        <button>End Turn</button>
+        <div id="player-two-cards-hand"></div>
+        <button id="player-two-end-turn">End Turn</button>
     </div>
 
     <script type="module" src="./controller.js"></script>
