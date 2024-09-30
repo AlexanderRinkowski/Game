@@ -1,9 +1,7 @@
 // controller.js
-import { Card, GameModel } from './model.js';
+import { GameModel } from './model.js';
 
 let model = new GameModel();
-
-// ViewModelMapping ? 
 
 const userInput = {
     moveCardDragging: {
@@ -250,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
     model.onModelChanged(() => {
         updateView.renderFull(); 
     });
+
     // initital render
     model.start();
 });
