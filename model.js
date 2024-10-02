@@ -2,14 +2,12 @@ class EventEmitter {
     constructor() {
         this.events = {};
     }
-
     on(event, listener) {
         if (!this.events[event]) {
             this.events[event] = [];
         }
         this.events[event].push(listener);
     }
-
     emit(event, data) {
         if (this.events[event]) {
             this.events[event].forEach(listener => listener(data));
@@ -98,7 +96,7 @@ const CombatHelper = {
 
 
 
-export class Card {
+class Card { // export class Card
     constructor(id, strength, cardType, owner) {
         this.id = id;
         this.strength = strength;
@@ -107,7 +105,7 @@ export class Card {
     }
 }
 
-export class GameModel {
+class GameModel { // export class GameModel
     constructor() {
         this.currentPlayer = null; 
         this.cardCount = null;
@@ -278,3 +276,7 @@ export class GameModel {
     }
     
 }
+
+model = new GameModel()
+
+console.log(model)
